@@ -1,3 +1,6 @@
 *.tar.gz
 src/*
 cross/*
+*.o
+*.bin
+*.iso
