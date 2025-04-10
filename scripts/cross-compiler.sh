@@ -113,11 +113,12 @@ if [[ "$answer" == "y" ]]; then
 
   mkdir build-gcc
   cd build-gcc
-  ../$gccName/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --disable-hosted-libstdcxx
+  ../$gccName/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --enable-languages=c,c++ --without-headers --disable-hosted-libstdcxx
+  make clean
   make all-gcc
   make all-target-libgcc
   make all-target-libstdc++-v3
-  make install-gcc
+  make install-gcc -j4
   make install-target-libgcc
   make install-target-libstdc++-v3
   echo "GCC build completed."
