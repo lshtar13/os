@@ -4,3 +4,4 @@ cross/*
 *.o
 *.bin
 *.iso
+*.d
