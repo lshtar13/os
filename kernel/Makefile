@@ -1,34 +1,46 @@
 HOST=i686-elf
 OS=myos
 
-CC=$(HOST)-gcc
+ROOTDIR?=../sysroot
+BOOTDIR=$(ROOTDIR)/boot
+GRUBDIR=$(BOOTDIR)/grub
+PREFIX=usr
+INCLUDEDIR=$(ROOTDIR)/$(PREFIX)/include
+
+ARCH=./arch/i386
+KERNEL=./kernel
+
+CC=$(HOST)-gcc --sysroot=$(ROOTDIR)
 GRUB=grub-mkrescue
 
 BIN=$(OS).bin
 ISO=$(OS).iso
 
-OBJS=\
-boot.o \
-kernel.o \
+ARCH_OBJS=\
+$(ARCH)/boot.o \
+$(ARCH)/tty.o \
 
-LSCRIPT=linker.ld
+KERNEL_OBJS=\
+$(KERNEL)/kernel.o \
+
+OBJS=\
+$(ARCH_OBJS) \
+$(KERNEL_OBJS) \
+
+LSCRIPT=$(ARCH)/linker.ld
 
 LINKS=\
-crti.o \
-crtbegin.o \
+$(ARCH)/crti.o \
+$(ARCH)/crtbegin.o \
 $(OBJS) \
-crtend.o \
-crtn.o \
+$(ARCH)/crtend.o \
+$(ARCH)/crtn.o \
 
 CFLAGS=-ffreestanding -O2 -Wall -Wextra
 GRUBCFG=\
 menuentry "$(OS)" {\
 	multiboot /boot/$(BIN)\
 }\
-
-ROOTDIR=sysroot
-BOOTDIR=$(ROOTDIR)/boot
-GRUBDIR=$(BOOTDIR)/grub
 
 .PHONY: all clean myos.bin install-kernel create install-kernel install-grub_cfg
 .SUFFIXES: .o .c .S .iso .cfg
@@ -39,8 +51,8 @@ $(BIN): $(LINKS) $(LSCRIPT)
 	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib -lgcc $(LINKS)
 	grub-file --is-x86-multiboot $@
 
-crtbegin.o crtend.o:
-	POS=`$(CC) --print-file-name=$@` && cp "$$POS" $@
+$(ARCH)/crtbegin.o $(ARCH)/crtend.o:
+	POS=`$(CC) --print-file-name=$(@F)` && cp "$$POS" $@
 
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu99 $(CFLAGS)
@@ -54,6 +66,10 @@ clean:
 	rm -f $(BIN)
 	rm -f $(OBJS) *.o */*.o */*/*.o
 	rm -f $(OBJS:.o=.d) *.d */*.d */*/*.d
+
+install-headers:
+	mkdir -p $(INCLUDEDIR)
+	cp -R include/. $(INCLUDEDIR)/.
 
 create: $(ISO)
 
