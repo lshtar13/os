@@ -1,6 +1,7 @@
 *.tar.gz
 src/*
 cross/*
+sysroot/*
 *.o
 *.bin
 *.iso

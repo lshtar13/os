@@ -14,8 +14,11 @@ kernel.o \
 LSCRIPT=linker.ld
 
 LINKS=\
+crti.o \
+crtbegin.o \
 $(OBJS) \
--lgcc \
+crtend.o \
+crtn.o \
 
 CFLAGS=-ffreestanding -O2 -Wall -Wextra
 GRUBCFG=\
@@ -32,9 +35,12 @@ GRUBDIR=$(BOOTDIR)/grub
 
 all: $(BIN)
 
-$(BIN): $(OBJS) $(LSCRIPT)
-	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib $(LINKS)
+$(BIN): $(LINKS) $(LSCRIPT)
+	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib -lgcc $(LINKS)
 	grub-file --is-x86-multiboot $@
+
+crtbegin.o crtend.o:
+	POS=`$(CC) --print-file-name=$@` && cp "$$POS" $@
 
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu99 $(CFLAGS)
