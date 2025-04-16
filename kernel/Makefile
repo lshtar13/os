@@ -33,7 +33,8 @@ $(ARCH)/crtn.o \
 
 LSCRIPT=$(ARCH)/linker.ld
 
-LIBS= -nostdlib -lk -lgcc
+#LIBS= -nostdlib -lk -lgcc
+LIBS= -lk 
 
 LINKS=\
 $(OBJS) \
