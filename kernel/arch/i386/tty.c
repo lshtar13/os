@@ -1,17 +1,18 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "vga.h"
 #include <kernel/tty.h>
 
-size_t strlen(const char* str) 
-{
-	size_t len = 0;
-	while (str[len])
-		len++;
-	return len;
-}
+//size_t strlen(const char* str) 
+//{
+//	size_t len = 0;
+//	while (str[len])
+//		len++;
+//	return len;
+//}
 
 #define VGA_WIDTH   80
 #define VGA_HEIGHT  25

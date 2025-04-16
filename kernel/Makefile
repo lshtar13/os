@@ -24,17 +24,20 @@ KERNEL_OBJS=\
 $(KERNEL)/kernel.o \
 
 OBJS=\
+$(ARCH)/crti.o \
+$(ARCH)/crtbegin.o \
 $(ARCH_OBJS) \
 $(KERNEL_OBJS) \
+$(ARCH)/crtend.o \
+$(ARCH)/crtn.o \
 
 LSCRIPT=$(ARCH)/linker.ld
 
+LIBS= -nostdlib -lk -lgcc
+
 LINKS=\
-$(ARCH)/crti.o \
-$(ARCH)/crtbegin.o \
 $(OBJS) \
-$(ARCH)/crtend.o \
-$(ARCH)/crtn.o \
+$(LIBS) \
 
 CFLAGS=-ffreestanding -O2 -Wall -Wextra
 GRUBCFG=\
@@ -47,7 +50,7 @@ menuentry "$(OS)" {\
 
 all: $(BIN)
 
-$(BIN): $(LINKS) $(LSCRIPT)
+$(BIN): $(OBJS) $(LSCRIPT)
 	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib -lgcc $(LINKS)
 	grub-file --is-x86-multiboot $@
 
