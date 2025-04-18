@@ -15,13 +15,13 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
+__attribute__ ((constructor)) void kernel_early_main(void)
+{
+	terminal_initialize();
+	printf("11111111111111111111111111111111111111111111111!\n");
+}
 
 void kernel_main(void) 
 {
-	/* Initialize terminal interface */
-	terminal_initialize();
-
-	/* Newline support is left as an exercise. */
-	//terminal_writestring("Hello, kernel World!\n");
-	printf("heeeeeeeeeeeeeee!\n");
+	printf("Hello, kernel World!\n");
 }
