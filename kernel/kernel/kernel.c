@@ -1,3 +1,8 @@
+#ifndef __is_libk
+#define __is_libk 1
+#endif
+
+#include <stdio.h>
 #include <kernel/tty.h>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -10,11 +15,13 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
+
 void kernel_main(void) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
 
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Hello, kernel World!\n");
+	//terminal_writestring("Hello, kernel World!\n");
+	printf("heeeeeeeeeeeeeee!\n");
 }

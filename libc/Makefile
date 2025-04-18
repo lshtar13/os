@@ -73,7 +73,7 @@ libk.a: $(LIBK_OBJS)
 	$(CC) -MD -c $< -o $@ $(CFLAGS)
 
 .c.libk.o:
-	$(CC) -MD -c $< -o $@ -std=gnu99 $(CFLAGS)
+	$(CC) -D__is_libk -MD -c $< -o $@ -std=gnu99 $(CFLAGS)
 
 .S.libk.o:
 	$(CC) -MD -c $< -o $@ $(CFLAGS)

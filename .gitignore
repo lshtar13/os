@@ -6,3 +6,4 @@ sysroot/*
 *.bin
 *.iso
 *.d
+*.a

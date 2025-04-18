@@ -6,14 +6,6 @@
 #include "vga.h"
 #include <kernel/tty.h>
 
-//size_t strlen(const char* str) 
-//{
-//	size_t len = 0;
-//	while (str[len])
-//		len++;
-//	return len;
-//}
-
 #define VGA_WIDTH   80
 #define VGA_HEIGHT  25
 #define VGA_MEMORY  0xB8000 
