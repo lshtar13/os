@@ -16,8 +16,29 @@ ARCH_HOSTED_OBJS=\
 HOSTED_OBJS=\
 $(ARCH_HOSTED_OBJS) \
 
+STDLIB_PREFIX=stdlib
+STDLIB_OBJS=\
+$(STDLIB_PREFIX)/abort.o \
+
+STDIO_PREFIX=stdio
+STDIO_OBJS=\
+$(STDIO_PREFIX)/printf.o \
+$(STDIO_PREFIX)/putchar.o \
+$(STDIO_PREFIX)/puts.o \
+
+STRING_PREFIX=string
+STRING_OBJS=\
+$(STRING_PREFIX)/memcmp.o \
+$(STRING_PREFIX)/memcpy.o \
+$(STRING_PREFIX)/memmove.o \
+$(STRING_PREFIX)/memset.o \
+$(STRING_PREFIX)/strlen.o \
+
+
 FREE_OBJS=\
-string/strlen.o \
+$(STDLIB_OBJS) \
+$(STDIO_OBJS) \
+$(STRING_OBJS) \
 
 OBJS=\
 $(ARCH_HOSTED_OBJS) \

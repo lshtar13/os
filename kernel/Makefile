@@ -71,14 +71,14 @@ clean:
 	rm -f $(OBJS) *.o */*.o */*/*.o
 	rm -f $(OBJS:.o=.d) *.d */*.d */*/*.d
 
+install: $(ISO)
+
+$(ISO): install-headers install-kernel install-grub_cfg
+	$(GRUB) -o $@ $(ROOTDIR)
+
 install-headers:
 	mkdir -p $(INCLUDEDIR)
 	cp -R include/. $(INCLUDEDIR)/.
-
-create: $(ISO)
-
-$(ISO): install-kernel install-grub_cfg
-	$(GRUB) -o $@ $(ROOTDIR)
 
 install-kernel: $(BIN)
 	mkdir -p $(BOOTDIR)
