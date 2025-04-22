@@ -10,7 +10,7 @@ INCLUDEDIR=$(ROOTDIR)/$(PREFIX)/include
 ARCH=./arch/i386
 KERNEL=./kernel
 
-CC=$(HOST)-gcc --sysroot=$(ROOTDIR)
+CC=$(HOST)-gcc --sysroot=$(ROOTDIR) -g
 GRUB=grub-mkrescue
 
 BIN=$(OS).bin
@@ -19,6 +19,8 @@ ISO=$(OS).iso
 ARCH_OBJS=\
 $(ARCH)/boot.o \
 $(ARCH)/tty.o \
+$(ARCH)/gdt.o \
+$(ARCH)/mem.o \
 
 KERNEL_OBJS=\
 $(KERNEL)/kernel.o \
@@ -40,7 +42,7 @@ LINKS=\
 $(OBJS) \
 $(LIBS) \
 
-CFLAGS=-ffreestanding -O2 -Wall -Wextra
+CFLAGS=-ffreestanding -Wall -Wextra
 GRUBCFG=\
 menuentry "$(OS)" {\
 	multiboot /boot/$(BIN)\

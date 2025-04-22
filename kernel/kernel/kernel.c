@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <kernel/tty.h>
+#include <kernel/mem.h>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -11,17 +12,16 @@
 #endif
 
 /* This tutorial will only work for the 32-bit ix86 targets. */
-#if !defined(__i386__)
-#error "This tutorial needs to be compiled with a ix86-elf compiler"
+#if defined(__i386__)
 #endif
 
 __attribute__ ((constructor)) void kernel_early_main(void)
 {
 	terminal_initialize();
-	printf("11111111111111111111111111111111111111111111111!\n");
 }
 
 void kernel_main(void) 
 {
+	initMem();
 	printf("Hello, kernel World!\n");
 }

@@ -53,7 +53,7 @@ $(OBJS) \
 #BINARIES=libk.a libc.a
 BINARIES=libk.a
 ARFLAGS=rcs
-CFLAGS=-ffreestanding -O2 -Wall -Wextra
+CFLAGS=-ffreestanding -Wall -Wextra
 
 .PHONY: all clean myos.bin install-kernel create install-kernel install-grub_cfg
 .SUFFIXES: .o .libk.o .c .S 
