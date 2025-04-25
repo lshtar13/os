@@ -7,3 +7,4 @@ sysroot/*
 *.iso
 *.d
 *.a
+libc/*.a
