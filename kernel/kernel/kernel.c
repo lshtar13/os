@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <kernel/tty.h>
 #include <kernel/mem.h>
+#include <kernel/interrupt.h>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -23,5 +24,6 @@ __attribute__ ((constructor)) void kernel_early_main(void)
 void kernel_main(void) 
 {
 	initMem();
+	initInterrupt();
 	printf("Hello, kernel World!\n");
 }

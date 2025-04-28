@@ -16,11 +16,27 @@ GRUB=grub-mkrescue
 BIN=$(OS).bin
 ISO=$(OS).iso
 
+GDT_OBJS=\
+$(ARCH)/gdt/gdt.o \
+$(ARCH)/gdt/gdts.o \
+
+INTERRUPT_OBJS=\
+$(ARCH)/interrupt/pic.o \
+$(ARCH)/interrupt/interrupt.o \
+$(ARCH)/interrupt/interrupts.o \
+
+VISUAL_OBJS=\
+$(ARCH)/visual/tty.o \
+
+IO_OBJS=\
+$(ARCH)/io/io.o \
+
 ARCH_OBJS=\
 $(ARCH)/boot.o \
-$(ARCH)/tty.o \
-$(ARCH)/gdt.o \
-$(ARCH)/mem.o \
+$(GDT_OBJS) \
+$(INTERRUPT_OBJS) \
+$(VISUAL_OBJS) \
+$(IO_OBJS) \
 
 KERNEL_OBJS=\
 $(KERNEL)/kernel.o \

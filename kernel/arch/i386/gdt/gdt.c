@@ -8,7 +8,7 @@ struct gdt_entry gdt_entries[GDT_ENTRY_N];
 struct gdt_ptr gdt_ptr;
 
 void initGdt(){
-	gdt_ptr.base = &gdt_entries;
+	gdt_ptr.base =(uintptr_t)&gdt_entries;
 	gdt_ptr.limit = (sizeof(struct gdt_entry)*GDT_ENTRY_N) -1;
 	
 	setGdtEntry(0, 0, 0, 0, 0);
