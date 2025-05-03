@@ -33,6 +33,7 @@ $(STRING_PREFIX)/memcpy.o \
 $(STRING_PREFIX)/memmove.o \
 $(STRING_PREFIX)/memset.o \
 $(STRING_PREFIX)/strlen.o \
+$(STRING_PREFIX)/itos.o \
 
 
 FREE_OBJS=\

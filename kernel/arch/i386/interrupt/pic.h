@@ -20,6 +20,9 @@
 #define ICW4_BUF_MASTER 0x0C /* Buffered mode/master */
 #define ICW4_SFNM 0x10       /* Special fully nested (not) */
 
+#define PIC_EOI 0x20
+
 void initPic(int master, int slave);
+void picEnd(int irq);
 
 #endif

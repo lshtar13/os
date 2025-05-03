@@ -9,11 +9,14 @@
 extern "C" {
 #endif
 
-int memcmp(const void*, const void*, size_t);
-void* memcpy(void* __restrict, const void* __restrict, size_t);
-void* memmove(void*, const void*, size_t);
-void* memset(void*, int, size_t);
-size_t strlen(const char*);
+#define INT_STRING_LEN 10
+
+int memcmp(const void *, const void *, size_t);
+void *memcpy(void *__restrict, const void *__restrict, size_t);
+void *memmove(void *, const void *, size_t);
+void *memset(void *, int, size_t);
+size_t strlen(const char *);
+int itos(int num, char results[]);
 
 #ifdef __cplusplus
 }

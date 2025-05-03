@@ -1,5 +1,5 @@
-#ifndef __ARCH_I386_IDT_H
-#define __ARCH_I386_IDT_H
+#ifndef __ARCH_I386_INTERRUPT_H
+#define __ARCH_I386_INTERRUPT_H
 
 #include <stdint.h>
 
@@ -27,7 +27,7 @@ struct interrupt_regs {
 };
 
 void initIdt();
-void setIdtDescriptor(uint8_t vector, void *isr, uint8_t flags);
-__attribute__((noreturn)) void exception_handler(struct interrupt_regs *regs);
+void setIdtDescriptor(uint8_t vector, uint32_t isr, uint8_t flags);
+__attribute__((noreturn)) void isr_handler(struct interrupt_regs regs);
 
 #endif
