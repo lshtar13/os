@@ -26,8 +26,8 @@ $(ARCH)/interrupt/isr.o \
 $(ARCH)/interrupt/idt.o \
 $(ARCH)/interrupt/interrupts.o \
 
-IO_OBJS=\
-$(ARCH)/io/io.o \
+UTIL_OBJS=\
+$(ARCH)/util/util.o \
 
 VISUAL_OBJS=\
 $(ARCH)/visual/tty.o \
@@ -40,7 +40,7 @@ $(ARCH)/boot.o \
 $(GDT_OBJS) \
 $(INTERRUPT_OBJS) \
 $(VISUAL_OBJS) \
-$(IO_OBJS) \
+$(UTIL_OBJS) \
 $(TIMER_OBJS) \
 
 KERNEL_OBJS=\

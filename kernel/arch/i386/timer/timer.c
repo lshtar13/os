@@ -2,7 +2,7 @@
 #include <kernel/timer.h>
 
 #include "../interrupt/isr.h"
-#include "../io/io.h"
+#include "../util/util.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -17,16 +17,15 @@ static void timerCallback(struct isr_regs *regs) {
 }
 
 void initTimer(uint32_t freq) {
-  __asm__ volatile("cli");
+  cli();
 
   installIrqHandler(IRQ0, timerCallback);
-
   tick = 0;
 
   uint32_t divisor = 119318 / freq;
-
   outb(0x43, 0x36);
   outb(0x40, (uint8_t)(divisor & 0xFF));
   outb(0x40, (uint8_t)((divisor >> 8) & 0xFF));
-  __asm__ volatile("sti");
+
+  sti();
 }

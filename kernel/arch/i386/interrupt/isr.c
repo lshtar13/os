@@ -1,5 +1,4 @@
 #include "isr.h"
-#include "../io/io.h"
 #include "pic.h"
 #include <stdint.h>
 
