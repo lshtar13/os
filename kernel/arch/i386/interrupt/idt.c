@@ -2,7 +2,6 @@
 #include "pic.h"
 #include <kernel/interrupt.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 __attribute__((aligned(0x10))) struct idt_entry idtEntries[IDT_ENTRY_N];

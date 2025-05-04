@@ -1,5 +1,6 @@
 #include "isr.h"
 #include "../io/io.h"
+#include "pic.h"
 #include <stdint.h>
 
 /* To print the message which defines every exception */
@@ -44,7 +45,7 @@ void exception_handler(struct isr_regs *regs) {
   if (intNo < NRESERVED) {
     isrHandler(intNo, regs);
   } else {
-    irqHandler(intNo, regs);
+    irqHandler(intNo - NRESERVED, regs);
   }
 }
 
@@ -63,9 +64,6 @@ uint32_t installIrqHandler(uint8_t isrNo, isr_t handler) {
 }
 
 void irqHandler(uint8_t no, struct isr_regs *regs) {
-  irqHandlers[no - NRESERVED](regs);
-  if (no >= 40) {
-    outb(0xA0, 0x20);
-  }
-  outb(0x20, 0x20);
+  irqHandlers[no](regs);
+  picEnd(no);
 }
