@@ -6,27 +6,30 @@ idt_flush:
 	ret
 
 isr_common_stub:
-	# 1. Save CPU state
-	pusha 
-	movw %ax, %ds 
-	push %eax 
-	movw %ax, 0x10
-	movw %ds, %ax
-	movw %es, %ax
-	movw %fs, %ax
-	movw %gs, %ax
-	
-    # 2. Call C handler
-	call isr_handler
-	
-    # 3. Restore state
-	pop %eax 
-	movw %ds, %ax
-	movw %es, %ax
-	movw %fs, %ax
-	movw %gs, %ax
-	popa
-	add %esp, 8 
+    pushal                  
+    movw %ds, %ax         
+    pushl %eax            
+    movl %cr2, %eax       
+    pushl %eax            
+
+    movw $0x10, %ax       
+    movw %ax, %ds         
+    movw %ax, %es         
+    movw %ax, %fs         
+    movw %ax, %gs         
+
+    pushl %esp            
+    call exception_handler
+
+    addl $0x8, %esp       
+    popl %ebx              
+    movw %bx, %ds           
+    movw %bx, %es           
+    movw %bx, %fs           
+    movw %bx, %gs           
+
+    popal                   
+	addl $0x8, %esp
 	sti
 	iret 
 
@@ -34,12 +37,12 @@ isr_common_stub:
 .global isr\num
 isr\num:
     cli
-	push $0
-	push $\num
+	pushl $0
+	pushl $\num
     jmp isr_common_stub
 .endm
 
-.extern isr_handler
+.extern exception_handler
 isr_stub 0
 isr_stub 1
 isr_stub 2

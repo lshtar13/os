@@ -1,6 +1,26 @@
 #ifndef __ARCH_I386_IDT_H
 #define __ARCH_I386_IDT_H
 
+#define IDT_ENTRY_N 256
+
+#include <stdint.h>
+
+struct idt_entry {
+  uint16_t isr_low;
+  uint16_t kernel_cs;
+  uint8_t reserved;
+  uint8_t attributes;
+  uint16_t isr_high;
+} __attribute__((packed));
+
+struct idt_ptr {
+  uint16_t limit;
+  uint32_t base;
+} __attribute__((packed));
+
+void initIdt();
+void setIdtDescriptor(uint8_t vector, uint32_t isr, uint8_t flags);
+
 extern void isr0(void);
 extern void isr1(void);
 extern void isr2(void);

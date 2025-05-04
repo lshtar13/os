@@ -17,15 +17,12 @@
 #if defined(__i386__)
 #endif
 
-__attribute__((constructor)) void kernel_early_main(void) {
-  terminal_initialize();
-}
-
 void kernel_main(void) {
   initMem();
   initInterrupt();
-  int a = 1 / 0;
-  while (a--) {
-    printf("Hello, kernel World!\n");
-  }
+  printf("hello world!");
+  initTimer(1);
+
+  for (;;)
+    ;
 }

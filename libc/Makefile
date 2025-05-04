@@ -9,7 +9,7 @@ LIBDIR=$(PREFIX)/lib
 ARCH=arch/i386
 
 AR=$(HOST)-ar
-CC=$(HOST)-gcc --sysroot=$(ROOTDIR)
+CC=$(HOST)-gcc --sysroot=$(ROOTDIR) -g
 
 ARCH_HOSTED_OBJS=\
 
