@@ -19,29 +19,20 @@ static inline uint32_t usedFrame(uint32_t idx) {
 }
 
 static pageframe_t __kallocFrame() {
-  uint32_t page = startFrame / PAGE_SIZE;
+  uint32_t page = startFrame / PAGE_SIZE, addr;
   for (; usedFrame(page); ++page) {
     if (page == MAX_PAGES) {
       return NO_AVAIL_PAGE;
     }
   }
-  // todo : set present bit
 
-  //  for (uint32_t i = 0; i < N_PAGE_ENTRY; ++i) {
-  //    if (!(directory[i] & PRESENT)) {
-  //      continue;
-  //    }
+  // todo: allocate page for table or page entry
+  addr = (page * PAGE_SIZE);
+  uint32_t didx = DIDX(addr), tidx = TIDX(addr);
+  uint32_t *table = (uint32_t *)ADDR(directory[didx]);
+  table[tidx] |= PRESENT;
 
-  //    uint32_t *table = (uint32_t *)(directory[i] - directory[i] % PAGE_SIZE);
-  //    for (uint32_t l = 0; l < N_PAGE_ENTRY; ++l) {
-  //      if (!(table[l] & PRESENT)) {
-  //        continue;
-  //      }
-
-  //    }
-  //  }
-
-  return (page * PAGE_SIZE);
+  return addr;
 }
 
 static void __kfreeFrame(pageframe_t addr) { uint32_t idx = addr / PAGE_SIZE; }
