@@ -3,6 +3,6 @@
 #include <driver/tty.h>
 
 void initDriver() {
-  terminal_initialize();
+  //  terminal_initialize();
   initKeyboard();
 }

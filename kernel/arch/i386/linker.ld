@@ -38,13 +38,17 @@ SECTIONS
 	.data BLOCK(4K) : ALIGN(4K)
 	{
 		*(.data)
+		end_data = .;
 	}
 
 	/* Read-write data (uninitialized) and stack */
 	.bss BLOCK(4K) : ALIGN(4K)
 	{
+		sbss = .;
 		*(COMMON)
 		*(.bss)
+        ebss = .;
+		endkernel = .;
 	}
 
 	/* The compiler may produce other sections, by default it will put them in

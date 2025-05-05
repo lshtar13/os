@@ -16,43 +16,50 @@ GRUB=grub-mkrescue
 BIN=$(OS).bin
 ISO=$(OS).iso
 
-GDT_OBJS=\
-$(ARCH)/gdt/gdt.o \
-$(ARCH)/gdt/gdts.o \
+ARCH_MEM_OBJS=\
+$(ARCH)/mem/gdt.o \
+$(ARCH)/mem/gdts.o \
+$(ARCH)/mem/page.o \
+$(ARCH)/mem/pages.o \
 
-INTERRUPT_OBJS=\
+ARCH_INTERRUPT_OBJS=\
 $(ARCH)/interrupt/pic.o \
 $(ARCH)/interrupt/isr.o \
 $(ARCH)/interrupt/idt.o \
 $(ARCH)/interrupt/interrupts.o \
 
-UTIL_OBJS=\
+ARCH_UTIL_OBJS=\
 $(ARCH)/util/util.o \
 
-TIMER_OBJS=\
+ARCH_TIMER_OBJS=\
 $(ARCH)/timer/timer.o \
 
-VISUAL_OBJS=\
+ARCH_VISUAL_OBJS=\
 $(ARCH)/driver/visual/vga.o \
 
-KEYBOARD_OBJS=\
+ARCH_KEYBOARD_OBJS=\
 $(ARCH)/driver/keyboard/keyboard.o \
 
-DRIVER_OBJS=\
-$(VISUAL_OBJS) \
-$(KEYBOARD_OBJS) \
+ARCH_DRIVER_OBJS=\
+$(ARCH_VISUAL_OBJS) \
+$(ARCH_KEYBOARD_OBJS) \
 $(ARCH)/driver/driver.o \
 
 ARCH_OBJS=\
 $(ARCH)/boot.o \
-$(GDT_OBJS) \
-$(INTERRUPT_OBJS) \
-$(UTIL_OBJS) \
-$(TIMER_OBJS) \
-$(DRIVER_OBJS) \
+$(ARCH_MEM_OBJS) \
+$(ARCH_INTERRUPT_OBJS) \
+$(ARCH_UTIL_OBJS) \
+$(ARCH_TIMER_OBJS) \
+$(ARCH_DRIVER_OBJS) \
+
+MEM_OBJS=\
+$(KERNEL)/mem/mem.o \
+$(KERNEL)/mem/page.o \
 
 KERNEL_OBJS=\
 $(KERNEL)/kernel.o \
+$(MEM_OBJS) \
 
 OBJS=\
 $(ARCH)/crti.o \
@@ -83,7 +90,7 @@ menuentry "$(OS)" {\
 all: $(BIN)
 
 $(BIN): $(OBJS) $(LSCRIPT)
-	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib -lgcc $(LINKS)
+	$(CC) -T $(LSCRIPT) -o $@ $(CFLAGS) -nostdlib -static-libgcc -lgcc $(LINKS)
 	grub-file --is-x86-multiboot $@
 
 $(ARCH)/crtbegin.o $(ARCH)/crtend.o:

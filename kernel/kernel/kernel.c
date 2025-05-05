@@ -1,8 +1,10 @@
+#include <string.h>
 #ifndef __is_libk
 #define __is_libk 1
 #endif
 
 #include <driver/driver.h>
+#include <kernel/defs.h>
 #include <kernel/interrupt.h>
 #include <kernel/mem.h>
 #include <kernel/timer.h>
@@ -24,7 +26,11 @@ void kernel_main(void) {
   initTimer(1);
   initDriver();
 
+  //  char *c = (char *)kallocFrame();
+  //  strcpy(c, "yeah");
+  //  printf("%p %s", c, c);
   printf("hello world!");
+
   for (;;)
     ;
 }

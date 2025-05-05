@@ -62,4 +62,6 @@ void setIdtDescriptor(uint8_t vector, uint32_t isr, uint8_t flags) {
   descriptor->reserved = 0;
 }
 
-void initInterrupt() { initIdt(); }
+void initInterrupt() {
+  initIdt();
+}

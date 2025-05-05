@@ -34,6 +34,8 @@ $(STRING_PREFIX)/memmove.o \
 $(STRING_PREFIX)/memset.o \
 $(STRING_PREFIX)/strlen.o \
 $(STRING_PREFIX)/itos.o \
+$(STRING_PREFIX)/strcat.o \
+$(STRING_PREFIX)/strcpy.o \
 
 
 FREE_OBJS=\
@@ -41,9 +43,14 @@ $(STDLIB_OBJS) \
 $(STDIO_OBJS) \
 $(STRING_OBJS) \
 
+UTIL_PREFIX=util
+UTIL_OBJS=\
+$(UTIL_PREFIX)/arith64.o \
+
 OBJS=\
 $(ARCH_HOSTED_OBJS) \
 $(FREE_OBJS) \
+$(UTIL_OBJS) \
 
 LIBK_OBJS=\
 $(OBJS:.o=.libk.o) \
