@@ -37,7 +37,7 @@ isr_common_stub:
 .global isr\num
 isr\num:
     cli
-	pushl $0
+	pushl $0x0
 	pushl $\num
     jmp isr_common_stub
 .endm
@@ -76,3 +76,4 @@ isr_stub 29
 isr_stub 30
 isr_stub 31
 isr_stub 32
+isr_stub 33

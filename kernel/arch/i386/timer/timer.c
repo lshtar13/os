@@ -1,20 +1,9 @@
 #include "timer.h"
 #include <kernel/timer.h>
 
-#include "../interrupt/isr.h"
-#include "../util/util.h"
+uint32_t tick;
 
-#include <stdio.h>
-#include <string.h>
-
-uint32_t tick, nprint = 0;
-
-#define THRESHOLD 100
-
-static void timerCallback(struct isr_regs *regs) {
-  ++tick;
-  printf("ticked");
-}
+static void timerCallback(struct isr_regs *regs) { ++tick; }
 
 void initTimer(uint32_t freq) {
   cli();

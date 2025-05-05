@@ -2,9 +2,10 @@
 #define __is_libk 1
 #endif
 
+#include <driver/driver.h>
 #include <kernel/interrupt.h>
 #include <kernel/mem.h>
-#include <kernel/tty.h>
+#include <kernel/timer.h>
 #include <stdio.h>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -20,9 +21,10 @@
 void kernel_main(void) {
   initMem();
   initInterrupt();
-  printf("hello world!");
   initTimer(1);
+  initDriver();
 
+  printf("hello world!");
   for (;;)
     ;
 }

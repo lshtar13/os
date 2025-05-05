@@ -1,6 +1,5 @@
 #include "isr.h"
 #include "pic.h"
-#include <stdint.h>
 
 /* To print the message which defines every exception */
 char *exception_messages[] = {"Division By Zero",
@@ -53,7 +52,9 @@ void isrHandler(uint8_t no, struct isr_regs *regs) {
   abort();
 }
 
-isr_t irqHandlers[16] = {};
+isr_t irqHandlers[16] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
 
 uint32_t installIrqHandler(uint8_t isrNo, isr_t handler) {
   int idx = isrNo - NRESERVED;
@@ -63,6 +64,8 @@ uint32_t installIrqHandler(uint8_t isrNo, isr_t handler) {
 }
 
 void irqHandler(uint8_t no, struct isr_regs *regs) {
-  irqHandlers[no](regs);
+  if (irqHandlers[no]) {
+    irqHandlers[no](regs);
+  }
   picEnd(no);
 }

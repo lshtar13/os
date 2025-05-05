@@ -29,19 +29,27 @@ $(ARCH)/interrupt/interrupts.o \
 UTIL_OBJS=\
 $(ARCH)/util/util.o \
 
-VISUAL_OBJS=\
-$(ARCH)/visual/tty.o \
-
 TIMER_OBJS=\
 $(ARCH)/timer/timer.o \
+
+VISUAL_OBJS=\
+$(ARCH)/driver/visual/vga.o \
+
+KEYBOARD_OBJS=\
+$(ARCH)/driver/keyboard/keyboard.o \
+
+DRIVER_OBJS=\
+$(VISUAL_OBJS) \
+$(KEYBOARD_OBJS) \
+$(ARCH)/driver/driver.o \
 
 ARCH_OBJS=\
 $(ARCH)/boot.o \
 $(GDT_OBJS) \
 $(INTERRUPT_OBJS) \
-$(VISUAL_OBJS) \
 $(UTIL_OBJS) \
 $(TIMER_OBJS) \
+$(DRIVER_OBJS) \
 
 KERNEL_OBJS=\
 $(KERNEL)/kernel.o \

@@ -1,5 +1,4 @@
 #include "pic.h"
-#include "../util/util.h"
 
 void initPic(int masterOffset, int slaveOffset) {
 

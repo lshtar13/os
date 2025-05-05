@@ -1,5 +1,5 @@
-#ifndef _KERNEL_TTY_H
-#define _KERNEL_TTY_H 1
+#ifndef _DRIVER_TTY_H
+#define _DRIVER_TTY_H 1
 
 #include <stddef.h>
 

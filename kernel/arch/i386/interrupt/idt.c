@@ -1,8 +1,6 @@
 #include "idt.h"
 #include "pic.h"
 #include <kernel/interrupt.h>
-#include <stdint.h>
-#include <string.h>
 
 __attribute__((aligned(0x10))) struct idt_entry idtEntries[IDT_ENTRY_N];
 struct idt_ptr idtPtr;
@@ -47,6 +45,7 @@ void initIdt() {
   setIdtDescriptor(30, (uint32_t)isr30, 0x8E);
   setIdtDescriptor(31, (uint32_t)isr31, 0x8E);
   setIdtDescriptor(32, (uint32_t)isr32, 0x8E);
+  setIdtDescriptor(33, (uint32_t)isr33, 0x8E);
 
   initPic(0x20, 0x28);
 

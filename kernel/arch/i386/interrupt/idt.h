@@ -4,6 +4,7 @@
 #define IDT_ENTRY_N 256
 
 #include <stdint.h>
+#include <string.h>
 
 struct idt_entry {
   uint16_t isr_low;
@@ -54,4 +55,5 @@ extern void isr29(void);
 extern void isr30(void);
 extern void isr31(void);
 extern void isr32(void);
+extern void isr33(void);
 #endif
