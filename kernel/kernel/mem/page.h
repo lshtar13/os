@@ -4,21 +4,32 @@
 
 #include <kernel/defs.h>
 
-#define PAGE_SIZE 0x1000
-#define MAX_PAGES 0x100000
+#define FRAME_SIZE 0x1000
+#define MAX_FRAMES 0x100000
+#define N_BITMAP_ENTRY (MAX_FRAMES / 32 + 1)
+#define NO_AVAIL_FRAME 0
+
+#define FRAME_USE(bitmap, idx) (bitmap[idx / 32] |= (1 << idx % 32))
+#define FRAME_UNUSE(bitmap, idx) (bitmap[idx / 32] &= ~(1 << (idx % 32)))
+#define FRAME_ISUSED(bitmap, idx) (bitmap[idx / 32] & (1 << (idx % 32)))
+
 #define N_PAGE_ENTRY 0x400
-#define NO_AVAIL_PAGE 0
 
-#define DIDX(addr) (addr >> 22)
-#define TIDX(addr) ((addr >> 12) & 0xFFF)
-#define ADDR(entry) (entry & ~0xFFF)
+#define PAGE_TIDX(addr) (addr >> 22)
+#define PAGE_PIDX(addr) ((addr >> 12) & 0x3FF)
+#define PAGE_ADDR(entry) (entry & ~0xFFF)
 
-#define SUP 0x4
-#define RW 0x2
-#define PRESENT 0x1
+#define PAGE_SUP 0x4
+#define PAGE_RW 0x2
+#define PAGE_PRESENT 0x1
 
 extern ptr_t endkernel;
 
 typedef ptr_t pageframe_t;
+
+struct pframe_t {
+  ptr_t start;
+  uint32_t bitmap[N_BITMAP_ENTRY], lastIdx;
+};
 
 #endif

@@ -26,7 +26,7 @@ void kernel_main(void) {
   initTimer(1);
   initDriver();
 
-  char *c = (char *)kallocFrame();
+  char *c = (char *)kallocPage();
   strcpy(c, "yeah");
   printf("%p %s", c, c);
   printf("hello world!");

@@ -2,79 +2,82 @@
 #include <kernel/defs.h>
 #include <kernel/mem.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
-pageframe_t startFrame;
-uint32_t *directory, bitmap[MAX_PAGES / 32 + 1];
+struct pframe_t frames;
+uint32_t *directory, bitmap[N_BITMAP_ENTRY] = {};
 
 static inline void useFrame(uint32_t idx) {
-  bitmap[idx / 32] |= (1 << (idx % 32));
+  frames.bitmap[idx / 32] |= (1 << idx % 32);
 }
 
 static inline void unuseFrame(uint32_t idx) {
-  bitmap[idx / 32] &= ~(1 << (idx % 32));
+  frames.bitmap[idx / 32] &= ~(1 << (idx % 32));
 }
 
-static inline uint32_t usedFrame(uint32_t idx) {
-  return bitmap[idx / 32] & (1 << (idx % 32));
+static inline uint32_t isusedFrame(uint32_t idx) {
+  return frames.bitmap[idx / 32] & (1 << (idx % 32));
 }
 
-static pageframe_t __kallocFrame() {
-  uint32_t page = startFrame / PAGE_SIZE, addr;
-  for (; usedFrame(page); ++page) {
-    if (page == MAX_PAGES) {
-      return NO_AVAIL_PAGE;
+static uint32_t allocFrame() {
+  uint32_t fidx = frames.lastIdx;
+  for (; isusedFrame(fidx); ++fidx) {
+    if (fidx == MAX_FRAMES) {
+      return NO_AVAIL_FRAME;
     }
   }
 
-  // todo: allocate page for table or page entry
-  addr = (page * PAGE_SIZE);
-  uint32_t didx = DIDX(addr), tidx = TIDX(addr);
-  uint32_t *table = (uint32_t *)ADDR(directory[didx]);
-  table[tidx] |= PRESENT;
+  useFrame(fidx);
+  frames.lastIdx = fidx;
+
+  return fidx * FRAME_SIZE;
+}
+
+static pageframe_t __kallocPage() {
+  uint32_t frame = allocFrame(), addr = frame;
+
+  uint32_t tidx = PAGE_TIDX(addr), pidx = PAGE_PIDX(addr);
+  directory[tidx] |= PAGE_PRESENT;
+
+  uint32_t *table = (uint32_t *)PAGE_ADDR(directory[tidx]);
+  table[pidx] = frame | PAGE_RW | PAGE_PRESENT;
 
   return addr;
 }
 
-static void __kfreeFrame(pageframe_t addr) { uint32_t idx = addr / PAGE_SIZE; }
+uint32_t kallocPage() { return __kallocPage(); }
 
-uint32_t kallocFrame() { return __kallocFrame(); }
-
-void kfreeFrame(uint32_t addr) { __kfreeFrame((pageframe_t)addr); }
-
-static void setStartFrame(ptr_t ptr) {
-  startFrame = (ptr / PAGE_SIZE + 1) * PAGE_SIZE;
-}
-
-static inline void initBitMap() {
-  for (uint32_t idx = 0; idx < MAX_PAGES; ++idx) {
-    unuseFrame(idx);
-  }
+static void initFrames(uint32_t ptr) {
+  frames.start = (ptr / FRAME_SIZE + 1) * FRAME_SIZE;
+  memset(bitmap, 0, sizeof(uint32_t) * N_BITMAP_ENTRY);
 }
 
 void initPaging() {
-  // get where to start
-  setStartFrame(&endkernel);
-  initBitMap();
+  initFrames(&endkernel);
 
   // make page directory (directory dwells on first page)
-  directory = (uint32_t *)startFrame;
+  directory = (uint32_t *)frames.start;
   for (uint32_t i = 0; i < N_PAGE_ENTRY; ++i) {
-    directory[i] = RW;
+    directory[i] = PAGE_RW;
   }
 
   // make first page tables(first table dwells on second page)
-  uint32_t *firstTable = (uint32_t *)((ptr_t)startFrame + PAGE_SIZE), p;
-  for (uint32_t i = 0; i < N_PAGE_ENTRY; ++i) {
-    firstTable[i] = (i * PAGE_SIZE) | RW;
-    if (i * PAGE_SIZE <= (uint32_t)firstTable) {
-      firstTable[i] |= PRESENT;
-      useFrame(i);
-    }
+  // pagetable의 frame들은 첫번째 pagetable에 mapping한다.
+  uint32_t *firstTable = (uint32_t *)(frames.start + FRAME_SIZE),
+           *lastTable = (uint32_t *)(frames.start + FRAME_SIZE * N_PAGE_ENTRY);
+  for (uint32_t fidx = 0; fidx * FRAME_SIZE <= (uint32_t)lastTable; ++fidx) {
+    firstTable[fidx] = (fidx * FRAME_SIZE) | PAGE_RW | PAGE_PRESENT;
+    useFrame(fidx);
   }
-  directory[0] = ((uint32_t)firstTable) | RW | PRESENT;
+
+  for (uint32_t i = 0; i <= N_PAGE_ENTRY; ++i) {
+    directory[i] = ((uint32_t)firstTable + FRAME_SIZE * i) | PAGE_RW;
+  }
+  directory[0] |= PAGE_PRESENT;
+  directory[1] |= PAGE_PRESENT;
 
   // set register to enable paging
   setPageRegs(directory);
-
-  printf("%p %p ", directory, firstTable);
+  printf("%p %p ", firstTable, lastTable);
 }
