@@ -14,9 +14,11 @@
 #define FRAME_ISUSED(bitmap, idx) (bitmap[idx / 32] & (1 << (idx % 32)))
 
 #define N_PAGE_ENTRY 0x400
+#define N_TABLE_ENTRY 0x400
 
 #define PAGE_TIDX(addr) (addr >> 22)
 #define PAGE_PIDX(addr) ((addr >> 12) & 0x3FF)
+#define PAGE_2_ADDR(tidx, pidx) ((tidx << 22) | (pidx << 12))
 #define PAGE_ADDR(entry) (entry & ~0xFFF)
 
 #define PAGE_SUP 0x4
