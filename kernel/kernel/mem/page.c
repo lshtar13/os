@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
-struct pframe_t frames;
-uint32_t *directory, *tables, nextAddr;
+static struct pframe_t frames;
+static uint32_t *directory, *tables, nextAddr;
 
 static inline void useFrame(uint32_t idx) {
   frames.bitmap[idx / 32] |= (1 << idx % 32);
@@ -33,25 +33,46 @@ static uint32_t allocFrame() {
   return fidx * FRAME_SIZE;
 }
 
-static pageframe_t __kallocPage(uint32_t addr) {
-  uint32_t tidx = PAGE_TIDX(addr), pidx = PAGE_PIDX(addr);
+static void freeFrame(uint32_t paddr) {
+  uint32_t fidx = paddr / FRAME_SIZE;
+  unuseFrame(fidx);
+  frames.lastIdx = fidx;
+}
+
+static pageframe_t __allocPage(uint32_t vaddr) {
+  uint32_t tidx = PAGE_TIDX(vaddr), pidx = PAGE_PIDX(vaddr), *table;
   if (!(directory[tidx] & PAGE_PRESENT)) {
     uint32_t tframe = allocFrame();
     directory[tidx] = tframe | PAGE_RW | PAGE_PRESENT;
     tables[tidx + 1] = tframe | PAGE_RW | PAGE_PRESENT;
   }
 
-  uint32_t *table = (uint32_t *)PAGE_2_ADDR(1, tidx + 1);
+  table = (uint32_t *)PAGE_2_ADDR(PAGE_TABLE_TIDX, PAGE_TABLE_PIDX(tidx));
   table[pidx] = allocFrame() | PAGE_RW | PAGE_PRESENT;
 
-  return addr;
+  printf("table : %p %x ", table, table[pidx]);
+
+  return vaddr;
+}
+
+static void __freePage(uint32_t vaddr) {
+  uint32_t tidx = PAGE_TIDX(vaddr), pidx = PAGE_PIDX(vaddr), *table, paddr;
+  table = (uint32_t *)PAGE_2_ADDR(PAGE_TABLE_TIDX, PAGE_TABLE_PIDX(tidx));
+  table[pidx] = table[pidx] & ~PAGE_PRESENT;
+  paddr = PAGE_PADDR(table[pidx]);
+  freeFrame(paddr);
+
+  printf("table : %p %x ", table, table[pidx]);
+  flushPageRegs();
 }
 
 uint32_t kallocPage() {
-  uint32_t result = __kallocPage(nextAddr);
+  uint32_t result = __allocPage(nextAddr);
   nextAddr += FRAME_SIZE;
   return result;
 }
+
+void kfreePage(uint32_t vaddr) { __freePage(vaddr); }
 
 static void initFrames(uint32_t ptr) {
   frames.start = (ptr / FRAME_SIZE + 1) * FRAME_SIZE;
@@ -82,17 +103,17 @@ void initPaging() {
   memset(secondTable, 0, sizeof(uint32_t) * N_PAGE_ENTRY);
 
   // kernel pages
-  dict[0] = PAGE_ADDR((uint32_t)firstTable) | PAGE_RW | PAGE_PRESENT;
+  dict[0] = PAGE_PADDR((uint32_t)firstTable) | PAGE_RW | PAGE_PRESENT;
   for (uint32_t addr = 0; addr <= (uint32_t)frames.start; addr += FRAME_SIZE) {
-    firstTable[PAGE_PIDX(addr)] = PAGE_ADDR(addr) | PAGE_RW | PAGE_PRESENT;
+    firstTable[PAGE_PIDX(addr)] = PAGE_PADDR(addr) | PAGE_RW | PAGE_PRESENT;
   }
 
   // table pages
   tables = secondTable;
-  dict[1] = PAGE_ADDR((uint32_t)secondTable) | PAGE_RW | PAGE_PRESENT;
-  secondTable[0] = PAGE_ADDR((uint32_t)dict) | PAGE_RW | PAGE_PRESENT;
-  secondTable[1] = PAGE_ADDR((uint32_t)firstTable) | PAGE_RW | PAGE_PRESENT;
-  secondTable[2] = PAGE_ADDR((uint32_t)secondTable) | PAGE_RW | PAGE_PRESENT;
+  dict[1] = PAGE_PADDR((uint32_t)secondTable) | PAGE_RW | PAGE_PRESENT;
+  secondTable[0] = PAGE_PADDR((uint32_t)dict) | PAGE_RW | PAGE_PRESENT;
+  secondTable[1] = PAGE_PADDR((uint32_t)firstTable) | PAGE_RW | PAGE_PRESENT;
+  secondTable[2] = PAGE_PADDR((uint32_t)secondTable) | PAGE_RW | PAGE_PRESENT;
   // set register to enable paging
   setPageRegs(dict);
   directory = (uint32_t *)PAGE_2_ADDR(1, 0);

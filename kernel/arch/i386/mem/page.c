@@ -4,7 +4,12 @@
 extern void loadPageDirectory(ptr_t);
 extern void enablePaging();
 
-void setPageRegs(ptr_t directory) {
+static ptr_t directory;
+
+void setPageRegs(ptr_t addr) {
+  directory = addr;
   loadPageDirectory(directory);
   enablePaging();
 }
+
+void flushPageRegs() { loadPageDirectory(directory); }

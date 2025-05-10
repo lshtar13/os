@@ -29,6 +29,8 @@ void kernel_main(void) {
   char *c = (char *)kallocPage();
   strcpy(c, "yeah");
   printf("%p %s ", c, c);
+  kfreePage(c);
+  printf("%p %s ", c, c);
   printf("hello world!");
 
   for (;;)
