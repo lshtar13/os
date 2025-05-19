@@ -116,6 +116,8 @@ void initPaging() {
   secondTable[2] = PAGE_PADDR((uint32_t)secondTable) | PAGE_RW | PAGE_PRESENT;
   // set register to enable paging
   setPageRegs(dict);
+
+  // set higher half kernel
   directory = (uint32_t *)PAGE_2_ADDR(1, 0);
   tables = (uint32_t *)PAGE_2_ADDR(1, 2);
   nextAddr = PAGE_2_ADDR(2, 0);

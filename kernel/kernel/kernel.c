@@ -21,16 +21,16 @@
 #endif
 
 void kernel_main(void) {
-  initMem();
-  initInterrupt();
-  initTimer(1);
-  initDriver();
+  //  initMem();
+  //  initInterrupt();
+  //  initTimer(1);
+  //  initDriver();
 
-  char *c = (char *)kallocPage();
-  strcpy(c, "yeah");
-  printf("%p %s ", c, c);
-  kfreePage(c);
-  printf("%p %s ", c, c);
+  //  char *c = (char *)kallocPage();
+  //  strcpy(c, "yeah");
+  //  printf("%p %s ", c, c);
+  //  kfreePage(c);
+  //  printf("%p %s ", c, c);
   printf("hello world!");
 
   for (;;)
