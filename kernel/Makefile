@@ -21,6 +21,7 @@ $(ARCH)/mem/gdt.o \
 $(ARCH)/mem/gdts.o \
 $(ARCH)/mem/page.o \
 $(ARCH)/mem/pages.o \
+$(ARCH)/mem/mem.o \
 
 ARCH_INTERRUPT_OBJS=\
 $(ARCH)/interrupt/pic.o \
@@ -56,6 +57,7 @@ $(ARCH_DRIVER_OBJS) \
 MEM_OBJS=\
 $(KERNEL)/mem/mem.o \
 $(KERNEL)/mem/page.o \
+$(KERNEL)/mem/frame.o \
 
 KERNEL_OBJS=\
 $(KERNEL)/kernel.o \

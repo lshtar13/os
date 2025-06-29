@@ -22,10 +22,18 @@ stack_top:
 # are available, as the bootloader might have loaded its multiboot structures or
 # modules there. This lets the bootloader know it must avoid the addresses.
 .section .bss, "aw", @nobits
+.global boot_page_directory
+.global boot_page_table1 
+.global swap_page_table0
+.global swap_page_table1
 	.align 4096
 boot_page_directory:
 	.skip 4096
 boot_page_table1:
+	.skip 4096
+swap_page_table0:
+	.skip 4096
+swap_page_table1:
 	.skip 4096
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 

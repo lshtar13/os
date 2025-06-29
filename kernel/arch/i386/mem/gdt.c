@@ -1,6 +1,6 @@
 #include "gdt.h"
+#include "mem.h"
 #include <kernel/mem.h>
-#include <stdio.h>
 
 extern void gdt_flush(uint32_t);
 
@@ -31,9 +31,4 @@ void setGdtEntry(uint32_t idx, uint32_t base, uint32_t limit, uint8_t access,
   gdt_entries[idx].flags |= (gran & 0xF0);
 
   gdt_entries[idx].access = access;
-}
-
-void initMem() {
-  initGdt();
-  initPaging();
 }
